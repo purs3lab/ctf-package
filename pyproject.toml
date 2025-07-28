@@ -1,0 +1,26 @@
+[project]
+name = "v2x-playground"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiodocker>=0.24.0",
+    "asyncio>=3.4.3",
+    "carla",
+    "fastapi[fastapi,full]>=0.115.12",
+    "httptools>=0.6.4",
+    "logfire[fastapi]>=3.16.0",
+    "networkx>=3.4.2",
+    "numpy>=2.2.5",
+    "pygame>=2.6.1",
+    "sqlalchemy>=2.0.41",
+    "uvicorn>=0.34.2",
+    "uvloop>=0.21.0",
+    "websockets",
+    "ipython",
+    "scipy"
+]
+
+[tool.uv.sources]
+carla = { path = "./carla-0.10.0-cp312-cp312-linux_x86_64.whl" }
