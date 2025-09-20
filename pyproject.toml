@@ -15,8 +15,6 @@ dependencies = [
     "numpy>=2.2.5",
     "pygame>=2.6.1",
     "sqlalchemy>=2.0.41",
-    "uvicorn>=0.34.2",
-    "uvloop>=0.21.0",
     "websockets",
     "ipython",
     "scipy"
