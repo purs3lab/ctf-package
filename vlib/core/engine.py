@@ -24,7 +24,7 @@ class ChallengeEngine:
     Handles challenge registration, lifecycle management, and status polling.
     """
 
-    def __init__(self, world: carla.World, poll_interval: float = 1.0):
+    def __init__(self, world: carla.World,client: carla.Client, poll_interval: float = 1.0):
         """
         Initialize the Challenge Engine.
 
@@ -33,6 +33,7 @@ class ChallengeEngine:
             poll_interval: How often to check challenge status (seconds)
         """
         self.world = world
+        self.client = client
         self.poll_interval = poll_interval
 
         # Challenge management
@@ -106,7 +107,7 @@ class ChallengeEngine:
         challenge = self.challenges[challenge_id]
 
         # Setup the challenge first
-        if not challenge.setup(self.world):
+        if not challenge.setup(self.world, self.client):
             logger.error(f"Failed to setup challenge {challenge_id}")
             return False
 
