@@ -2,11 +2,9 @@ import carla
 import logging
 import random
 
-from typing import Optional
-
 logger = logging.getLogger(__name__)
 
-def get_vehicle(world: carla.World , role_name: str) -> Optional[carla.Vehicle]:
+def get_vehicle(world: carla.World , role_name: str) -> carla.Vehicle | None:
     """Get a vehicle by its role name from the world"""
     if not world:
         logger.warning("World not set, cannot find vehicle")
@@ -19,7 +17,7 @@ def get_vehicle(world: carla.World , role_name: str) -> Optional[carla.Vehicle]:
                 return actor
     return None
 
-def deploy_vehicle(world, role_name: str, autopilot: bool) -> Optional[carla.Vehicle]:
+def deploy_vehicle(world, role_name: str, autopilot: bool) -> carla.Vehicle | None:
     """Deploy a vehicle with the specified role name in the world"""
     
     if not world:
@@ -52,7 +50,7 @@ def deploy_vehicle(world, role_name: str, autopilot: bool) -> Optional[carla.Veh
     spawn_points = world.get_map().get_spawn_points()
     
     # Try multiple spawn points to avoid collisions
-    vehicle: Optional[carla.Vehicle] = None
+    vehicle: carla.Vehicle | None = None
     max_attempts = 3
     
     for attempt in range(max_attempts):

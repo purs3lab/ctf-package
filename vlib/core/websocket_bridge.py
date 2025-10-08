@@ -3,7 +3,7 @@ import json
 import logging
 import threading
 import weakref
-from typing import Optional, Dict, Any, Callable
+from typing import Dict, Any, Callable
 import websockets
 from websockets.server import WebSocketServerProtocol
 
@@ -261,7 +261,7 @@ class WebSocketVirtualSensor:
             10 ** ((max_path_loss - frequency_loss) / 20) * 1000,
             1000  # Default filter distance
         )
-        max_distance = 30
+        max_distance = 50
         
         # Broadcast to all other V2X sensors within range
         for sensor in v2x_sensors:

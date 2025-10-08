@@ -9,7 +9,7 @@ Engine for managing and orchestrating multiple CTF challenges.
 import logging
 import threading
 import time
-from typing import Dict, List, Optional, Callable
+from typing import Dict, List, Callable
 
 import carla
 from vlib.core.challenge import Challenge, ChallengeStatus
@@ -42,11 +42,11 @@ class ChallengeEngine:
 
         # Polling control
         self._polling = False
-        self._poll_thread: Optional[threading.Thread] = None
+        self._poll_thread: threading.Thread | None = None
 
         # Callbacks
-        self.on_challenge_completed: Optional[Callable[[Challenge], None]] = None
-        self.on_challenge_failed: Optional[Callable[[Challenge], None]] = None
+        self.on_challenge_completed: Callable[[Challenge], None] | None = None
+        self.on_challenge_failed: Callable[[Challenge], None] | None = None
 
         logger.info("Challenge Engine initialized")
 
@@ -144,7 +144,7 @@ class ChallengeEngine:
 
         return result
 
-    def get_challenge(self, challenge_id: str) -> Optional[Challenge]:
+    def get_challenge(self, challenge_id: str) -> Challenge | None:
         """
         Get a challenge by ID.
 
