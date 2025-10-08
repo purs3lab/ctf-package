@@ -53,13 +53,15 @@ def deploy_vehicle_at_location(world: carla.World, role_name: str, transform: ca
             logger.error("No vehicle blueprints found")
             return None
         
-        # Choose a suitable vehicle blueprint
+        # Choose a suitable vehicle blueprint (always prefer Dodge Charger)
         blueprint = None
         for bp in vehicles:
-            if "charger" in bp.id.lower() or "cooper" in bp.id.lower():
+            if "charger" in bp.id.lower():
                 blueprint = bp
+                logger.info(f"Selected Dodge Charger: {bp.id}")
                 break
         if not blueprint:
+            logger.warning("Dodge Charger not found, using fallback vehicle")
             blueprint = vehicles[0]  # Fallback
         
         blueprint.set_attribute("role_name", role_name)
@@ -122,14 +124,16 @@ def deploy_vehicle(
         logger.warning("No vehicle blueprints found")
         return None
 
-    # Choose a suitable vehicle blueprint (prefer cars for platoon)
+    # Choose a suitable vehicle blueprint (always prefer Dodge Charger)
     blueprint = None
     for bp in vehicles:
-        if "charger" in bp.id.lower() or "cooper" in bp.id.lower():
+        if "charger" in bp.id.lower():
             blueprint = bp
+            logger.info(f"Selected Dodge Charger: {bp.id}")
             break
 
     if not blueprint:
+        logger.warning("Dodge Charger not found, using fallback vehicle")
         blueprint = vehicles[0]  # Fallback to first available
 
     logger.debug(f"Using vehicle blueprint: {blueprint.id}")
