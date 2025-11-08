@@ -3,35 +3,6 @@
 ### Container Management
 Navigate to the **Containers** tab to see available images:
 
-| Image | Description | Ports |
-|-------|-------------|-------|
-| `v2x-playground-carla` | Complete CARLA autonomous driving simulation | 2000, 2001, 2002, 8888 |
-| `sanity` | Basic Controls | None |
-| `v2xsanity` | V2X Check | None |
-
-
-### Environment Variables
-
-Containers automatically receive environment variables for service discovery:
-
-```bash
-TEAMNAME=<your-username>
-CARLA_2000=<allocated-port>
-CARLA_2001=<allocated-port>  
-CARLA_2002=<allocated-port>
-CARLA_8888=<allocated-port>
-CARLA_SERVER=<main-carla-port>
-```
-
-## 🔧 CARLA Simulator
-
-The CARLA container provides a complete autonomous driving simulation environment:
-
-- **Port 2000**: Python API (RPC)
-- **Port 2001**: Streaming server
-- **Port 2002**: Secondary server
-- **Port 8888**: Web interface
-
 ### Setting up Local Game Environment
 
 Install UV package manager for managing CTF dependencies:
@@ -78,7 +49,7 @@ If the import works without errors, you are good to go!
 Server IP and allocated port can be found in the UI under the Containers tab when you start the CARLA Container.
 ```bash
 # Inside the ctf-package directory
-python no_rendering_mode.py --host <Server IP> --port <allocated-port-2000>
+python no_rendering_mode.py --host <Server IP> --port 2000
 ```
 - You can have multiple instances of the client running to use one of the instances for top down view map to make things easy.
 
@@ -88,7 +59,7 @@ python no_rendering_mode.py --host <Server IP> --port <allocated-port-2000>
 import carla
 
 # Use the allocated port from environment or UI
-client = carla.Client('localhost', <allocated-port-2000>)
+client = carla.Client('IP', 2000)
 client.set_timeout(5.0)
 world = client.get_world()
 ```

@@ -2,7 +2,7 @@ import logging
 import time
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional, Dict, Any, override
+from typing import Dict, Any, override
 
 import carla
 
@@ -187,7 +187,7 @@ class Challenge(ABC):
             'elapsed_time': self.get_elapsed_time()
         }
     
-    def _find_player_vehicle(self) -> Optional[carla.Vehicle]:
+    def _find_player_vehicle(self) -> carla.Vehicle | None:
         """
         Find the player vehicle (hero vehicle) in the world.
         

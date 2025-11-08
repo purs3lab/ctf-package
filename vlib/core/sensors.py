@@ -5,7 +5,7 @@ import math
 import logging
 import weakref
 from datetime import datetime
-from typing import List, Dict, Optional, Any, Callable
+from typing import List, Dict, Any, Callable
 
 logger = logging.getLogger(__name__)
 
@@ -15,8 +15,8 @@ v2x_sensors = []
 
 class CAMData:
     """Generic Cooperative Awareness Message (CAM) data structure"""
-    def __init__(self, sender_id: str, timestamp: datetime, vehicle_data: Optional[Dict] = None, 
-                 extensions: Optional[Dict] = None, station_type_override: Optional[str] = None,
+    def __init__(self, sender_id: str, timestamp: datetime, vehicle_data: Dict | None = None, 
+                 extensions: Dict | None = None, station_type_override: str | None = None,
                  include_vehicle_data_container: bool = False):
         self.sender_id = sender_id
         self.timestamp = timestamp
@@ -175,9 +175,9 @@ class V2XSensorConfig:
 class V2XSensor:
     """Generic V2X sensor implementation following ETSI CAM standard"""
     
-    def __init__(self, world: carla.World, attach_to: Optional[carla.Actor] = None, 
-                 sensor_id: Optional[str] = None, transform: Optional[carla.Transform] = None,
-                 config: Optional[V2XSensorConfig] = None):
+    def __init__(self, world: carla.World, attach_to: carla.Actor | None = None, 
+                 sensor_id: str | None = None, transform: carla.Transform | None = None,
+                 config: V2XSensorConfig | None = None):
         self.world = world
         self.sensor_id = sensor_id or f"v2x_{random.randint(1000, 9999)}"
         self.attach_to = attach_to
@@ -202,7 +202,7 @@ class V2XSensor:
 
         self.message_handlers: list[Callable[[CAMData], None]] = []
         self.message_filters: list[Callable[[CAMData], bool]] = []
-        self.extensions_provider: Optional[Callable[[], Dict]] = None
+        self.extensions_provider: Callable[[], Dict] | None = None
 
         self.gnss_sensor = None
         self.imu_sensor = None
@@ -468,7 +468,7 @@ class V2XSensor:
 
         logger.debug(f"Sensor {self.sensor_id} received CAM from {cam_data.sender_id}")
 
-    def get_recent_messages(self, max_age: Optional[float] = None) -> List[CAMData]:
+    def get_recent_messages(self, max_age: float | None = None) -> List[CAMData]:
         """Get recent messages, optionally filtered by age"""
         if max_age is None:
             return self.received_messages.copy()
@@ -477,17 +477,17 @@ class V2XSensor:
         return [msg for msg in self.received_messages 
                 if msg.timestamp.timestamp() > cutoff_time]
 
-    def get_messages_from_sender(self, sender_id: str, max_age: Optional[float] = None) -> List[CAMData]:
+    def get_messages_from_sender(self, sender_id: str, max_age: float | None = None) -> List[CAMData]:
         """Get messages from a specific sender"""
         messages = self.get_recent_messages(max_age)
         return [msg for msg in messages if msg.sender_id == sender_id]
 
-    def get_latest_message_from_sender(self, sender_id: str, max_age: Optional[float] = None) -> Optional[CAMData]:
+    def get_latest_message_from_sender(self, sender_id: str, max_age: float | None = None) -> CAMData | None:
         """Get the latest message from a specific sender"""
         messages = self.get_messages_from_sender(sender_id, max_age)
         return messages[-1] if messages else None
 
-    def is_communication_active(self, sender_id: str, timeout: Optional[float] = None) -> bool:
+    def is_communication_active(self, sender_id: str, timeout: float | None = None) -> bool:
         """Check if communication with a specific sender is active"""
         if timeout is None:
             timeout = self.config.communication_timeout
@@ -495,7 +495,7 @@ class V2XSensor:
         latest = self.get_latest_message_from_sender(sender_id, timeout)
         return latest is not None
 
-    def get_communication_status(self, sender_ids: Optional[List[str]] = None) -> Dict[str, bool]:
+    def get_communication_status(self, sender_ids: List[str] | None = None) -> Dict[str, bool]:
         """Get communication status with specified senders or all known senders"""
         if sender_ids is None:
             # Get all unique sender IDs from recent messages

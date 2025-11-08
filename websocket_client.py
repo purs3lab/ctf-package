@@ -8,9 +8,14 @@ This script connects to the WebSocket server and demonstrates:
 3. Basic ping/pong functionality
 
 Usage:
-    python utils/websocket_test_client.py
+    python websocket_client.py [--host HOST] [--port PORT]
+    
+Examples:
+    python websocket_client.py --host 192.168.1.100 --port 8080
+    python websocket_client.py --host localhost --port 4000
 """
 
+import argparse
 import asyncio
 import json
 import logging
@@ -22,8 +27,8 @@ logger = logging.getLogger(__name__)
 
 
 class V2XWebSocketClient:
-    def __init__(self, uri="ws://localhost:4000"):
-        self.uri = uri
+    def __init__(self, host="localhost", port=4000):
+        self.uri = f"ws://{host}:{port}"
         self.websocket = None
         
     async def connect(self):
@@ -129,8 +134,8 @@ class V2XWebSocketClient:
             logger.info("Disconnected")
 
 
-async def main():
-    client = V2XWebSocketClient()
+async def main(host, port):
+    client = V2XWebSocketClient(host=host, port=port)
     
     if not await client.connect():
         return
@@ -169,4 +174,23 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = argparse.ArgumentParser(
+        description="V2X WebSocket Client - Connect to CARLA V2X WebSocket Server"
+    )
+    parser.add_argument(
+        '--host',
+        type=str,
+        default='localhost',
+        help='WebSocket server host/IP address (default: localhost)'
+    )
+    parser.add_argument(
+        '--port',
+        type=int,
+        default=4000,
+        help='WebSocket server port (default: 4000)'
+    )
+    
+    args = parser.parse_args()
+    
+    logger.info(f"Connecting to ws://{args.host}:{args.port}")
+    asyncio.run(main(args.host, args.port))
